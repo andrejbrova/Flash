@@ -126,7 +126,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     driverLocationRef.removeEventListener((driverLocationRefListener));
 
                     if(driverFoundID != null){
-                        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
+                        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);    // beshe dodadeno .child("customerRequest")
                         driverRef.removeValue();
                         driverFoundID = null;
                     }
@@ -146,7 +146,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     mDriverInfo.setVisibility(View.GONE);
                     mDriverName.setText("");
-                    mDriverCar.setText("");
+                    //mDriverCar.setText("");
                     mDriverProfileImage.setImageResource(R.mipmap.customer_image);
 
                 }
@@ -185,7 +185,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     GeoQuery geoQuery;
     private void getClosestDriver(){
-        DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+        DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driversWorking");
         GeoFire geoFire = new GeoFire(driverLocation);
 
         geoQuery = geoFire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
@@ -294,7 +294,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
     private void getDriverInfo(){
-        mDriverInfo.setVisibility(View.VISIBLE);
+        //mDriverInfo.setVisibility(View.VISIBLE);
         DatabaseReference mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
         mDriverDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -307,9 +307,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if(map.get("phone") != null){
                         mDriverPhone.setText(map.get("phone").toString());
                     }
-                    if(map.get("car") != null){
-                        mDriverCar.setText(map.get("car").toString());
-                    }
+//                    if(map.get("car") != null){
+//                        mDriverCar.setText(map.get("car").toString());
+//                    }
                     if(map.get("profileImageUrl") != null){
                         Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mDriverProfileImage);
 

@@ -31,16 +31,13 @@ public class DriverLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_driver_login);
 
         mAuth = FirebaseAuth.getInstance();
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user != null){
-                    Intent intent = new Intent(DriverLoginActivity.this, DriverMapActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return;
-                }
+        firebaseAuthListener = firebaseAuth -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if(user != null){
+                Intent intent = new Intent(DriverLoginActivity.this, DriverMapActivity.class);
+                startActivity(intent);
+                finish();
+                return;
             }
         };
 
@@ -65,6 +62,7 @@ public class DriverLoginActivity extends AppCompatActivity {
                             String userID = mAuth.getCurrentUser().getUid();
                             DatabaseReference currentUserDB = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userID).child("name");
                             currentUserDB.setValue(email);
+
                         }
                     }
                 });
@@ -76,10 +74,13 @@ public class DriverLoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(DriverLoginActivity.this, new OnCompleteListener<AuthResult>() {
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(!task.isSuccessful()){
+                        if(task.isSuccessful()){
+                            Toast.makeText(DriverLoginActivity.this, "Sign up successful!", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
                             Toast.makeText(DriverLoginActivity.this, "Sign up error!", Toast.LENGTH_SHORT).show();
                         }
                     }

@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20sp"
         android:background="@null"
-        android:hint="customer_name" />
+        android:hint="driver_name" />
 
     <EditText
         android:id="@+id/phone"
